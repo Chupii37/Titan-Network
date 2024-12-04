@@ -1,16 +1,6 @@
 #!/bin/bash
 
-# Step 1: Check and install ufw if not installed
-if ! command -v ufw &> /dev/null
-then
-    echo "ufw not found, installing ufw..."
-    sudo apt update && sudo apt install -y ufw
-    echo "ufw has been installed."
-else
-    echo "ufw is already installed."
-fi
-
-# Step 2: Check and install Docker if not installed
+# Step 1: Check and install Docker if not installed
 if ! command -v docker &> /dev/null
 then
     echo "Docker not found, installing Docker..."
@@ -27,11 +17,11 @@ else
     echo "Docker is already installed."
 fi
 
-# Step 3: Download the Docker Image
+# Step 2: Download the Docker Image
 echo "Pulling the Docker image nezha123/titan-edge..."
 docker pull nezha123/titan-edge
 
-# Step 4: Create Your Own Storage Volume (~/.titanedge directory)
+# Step 3: Create Your Own Storage Volume (~/.titanedge directory)
 if [ ! -d "$HOME/.titanedge" ]; then
     echo "Creating ~/.titanedge directory for storage volume..."
     mkdir -p "$HOME/.titanedge"
@@ -39,20 +29,11 @@ else
     echo "~/.titanedge directory already exists."
 fi
 
-# Step 5: Allow Port 1234 (or custom port) in the firewall
-# Ask the user for a port number
-read -p "Enter the port to be used for the container (default: 1234): " user_port
-user_port=${user_port:-1234}  # If no input is provided, default to port 1234
+# Step 4: Run the Docker Container with Network Host and Name
+echo "Running the Titan-Edge container with volume ~/.titanedge and network=host..."
+docker run -d --name titan_edge --network=host -v "$HOME/.titanedge:/root/.titanedge" nezha123/titan-edge
 
-echo "Checking and allowing access for port $user_port..."
-sudo ufw allow $user_port/tcp
-echo "Port $user_port has been opened in the firewall."
-
-# Step 6: Run the Docker Container (without --network=host)
-echo "Running the Titan-Edge container with volume ~/.titanedge..."
-docker run -d -v "$HOME/.titanedge:/root/.titanedge" -p $user_port:$user_port nezha123/titan-edge
-
-# Step 7: Bind the Identification Code (Ask for and update the hash if needed)
+# Step 5: Bind the Identification Code (Ask for and update the hash if needed)
 if [ ! -f "$HOME/.titanedge/hash.txt" ]; then
     read -p "Enter your hash (your-hash-here): " user_hash
     echo "$user_hash" > "$HOME/.titanedge/hash.txt"
