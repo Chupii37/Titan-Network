@@ -31,15 +31,15 @@ docker pull nezha123/titan-edge
 echo "Creating ~/.titanedge directory..."
 mkdir -p ~/.titanedge
 
-# Run Docker container with the name "titan_edge" and --network=host option
-echo "Running Docker container with the name 'titan_edge' and --network=host..."
-docker run --network=host -d -v ~/.titanedge:/root/.titanedge --name titan_edge nezha123/titan-edge
+# Run Docker container with --network=host option
+echo "Running Docker container..."
+docker run --network=host -d -v ~/.titanedge:/root/.titanedge nezha123/titan-edge
 
 # Prompt the user to input the hash
 read -p "Enter your hash (your-hash-here): " user_hash
 
 # Run the binding command with the provided hash
 echo "Running binding command with hash $user_hash..."
-docker run --rm -it -v ~/.titanedge:/root/.titanedge --name titan_edge nezha123/titan-edge bind --hash=$user_hash https://api-test1.container1.titannet.io/api/v2/device/binding
+docker run --rm -it -v ~/.titanedge:/root/.titanedge nezha123/titan-edge bind --hash=$user_hash https://api-test1.container1.titannet.io/api/v2/device/binding
 
 echo "Script completed successfully."
