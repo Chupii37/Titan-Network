@@ -33,14 +33,15 @@ fi
 echo "Running the Titan-Edge container with volume ~/.titanedge and network=host..."
 docker run -d --name titan_edge --network=host -v "$HOME/.titanedge:/root/.titanedge" nezha123/titan-edge
 
-# Step 5: Bind the Identification Code (Ask for and update the hash if needed)
+# Step 5: Bind the Identification Code
 if [ ! -f "$HOME/.titanedge/hash.txt" ]; then
+    echo "No hash found. Please provide your hash."
     read -p "Enter your hash (your-hash-here): " user_hash
     echo "$user_hash" > "$HOME/.titanedge/hash.txt"
 else
     user_hash=$(cat "$HOME/.titanedge/hash.txt")
     echo "Currently used hash: $user_hash"
-    read -p "If you want to change the hash, enter the new hash (press Enter to keep the current one): " new_hash
+    read -p "Enter a new hash if you want to update (press Enter to keep the current one): " new_hash
     if [ -n "$new_hash" ]; then
         echo "$new_hash" > "$HOME/.titanedge/hash.txt"
         user_hash="$new_hash"
@@ -49,7 +50,6 @@ else
 fi
 
 # Step 6: Run the binding command with the user-provided hash
-echo "Running the binding command with your hash... (This will require your input)"
 docker run --rm -it -v "$HOME/.titanedge:/root/.titanedge" nezha123/titan-edge bind --hash="$user_hash" https://api-test1.container1.titannet.io/api/v2/device/binding
 
 echo "Process completed."
