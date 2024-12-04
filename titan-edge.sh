@@ -48,8 +48,8 @@ else
     fi
 fi
 
-# Running the binding command with the user-provided hash
-echo "Running the binding command with your hash..."
+# Step 6: Run the binding command with the user-provided hash
+echo "Running the binding command with your hash... (This will require your input)"
 docker run --rm -it -v "$HOME/.titanedge:/root/.titanedge" nezha123/titan-edge bind --hash="$user_hash" https://api-test1.container1.titannet.io/api/v2/device/binding
 
 echo "Process completed."
