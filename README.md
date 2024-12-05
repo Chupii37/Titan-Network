@@ -9,7 +9,7 @@ Storage: 1 GB
 
 Bandwidth: based on availability
 ## Register for a Titan Network Account
-Before running the node, you need to sign up for an account on Network3. You can sign up using the following link :
+Before running the node, you need to sign up for an account on Titan Network. You can sign up using the following link :
 
 [Register Titan Network](https://test1.titannet.io/intiveRegister?code=qnOIMD)
 
