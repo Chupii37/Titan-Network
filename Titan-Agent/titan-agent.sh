@@ -75,15 +75,26 @@ fi
 # Langkah 7: Mengunduh File Titan Agent
 echo -e "\033[34mMengunduh Titan Agent...\033[0m"
 mkdir -p $INSTALL_DIR  # Membuat direktori jika belum ada
-wget -O $INSTALL_DIR/$AGENT_ZIP $AGENT_URL
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mUnduhan gagal. Periksa koneksi jaringan atau URL.\033[0m"
-  exit 1
+
+# Cek apakah file sudah ada
+if [ ! -f "$INSTALL_DIR/$AGENT_ZIP" ]; then
+  wget -O $INSTALL_DIR/$AGENT_ZIP $AGENT_URL
+  if [ $? -ne 0 ]; then
+    echo -e "\033[31mUnduhan gagal. Periksa koneksi jaringan atau URL.\033[0m"
+    exit 1
+  fi
+else
+  echo -e "\033[32mFile agent-linux.zip sudah ada, melanjutkan ekstraksi...\033[0m"
 fi
 
 # Langkah 8: Ekstrak File Titan Agent
 echo -e "\033[34mMenyiapkan direktori dan mengekstrak file...\033[0m"
-mkdir -p $INSTALL_DIR
+# Memastikan unzip terinstal
+if ! command -v unzip &> /dev/null; then
+  echo -e "\033[31mPerintah unzip tidak ditemukan. Menginstal unzip...\033[0m"
+  sudo apt install -y unzip
+fi
+
 unzip $INSTALL_DIR/$AGENT_ZIP -d $INSTALL_DIR
 if [ $? -ne 0 ]; then
   echo -e "\033[31mEkstraksi gagal. Pastikan unzip terinstal.\033[0m"
