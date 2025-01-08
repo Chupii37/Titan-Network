@@ -74,6 +74,7 @@ fi
 
 # Langkah 7: Mengunduh File Titan Agent
 echo -e "\033[34mMengunduh Titan Agent...\033[0m"
+mkdir -p $INSTALL_DIR  # Membuat direktori jika belum ada
 wget -O $INSTALL_DIR/$AGENT_ZIP $AGENT_URL
 if [ $? -ne 0 ]; then
   echo -e "\033[31mUnduhan gagal. Periksa koneksi jaringan atau URL.\033[0m"
