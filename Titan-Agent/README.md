@@ -18,3 +18,16 @@ Run Node
    ```bash
    wget https://raw.githubusercontent.com/Chupii37/Titan-Network/refs/heads/main/Titan-Agent/titan-agent.sh  && chmod +x titan-agent.sh && ./titan-agent.sh
    ```
+## After End of Project
+   ```bash
+   sudo systemctl stop titan-agent.service
+   ```
+   ```bash
+   sudo systemctl disable titan-agent.service
+   ```
+   ```bash
+   sudo rm /etc/systemd/system/titan-agent.service
+   ```
+   ```bash
+   sudo rm -rf /opt/titanagent
+   ```
