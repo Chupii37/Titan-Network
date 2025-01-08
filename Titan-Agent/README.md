@@ -16,7 +16,7 @@ Before run node you need visit [Titan Network](https://test4.titannet.io/)
 
 Run Node
    ```bash
-   wget https://raw.githubusercontent.com/Chupii37/Titan-Network/refs/heads/main/Titan-Agent/titan-agent.sh  && chmod +x titan-agent.sh && ./titan-agent.sh
+   curl -sSL https://raw.githubusercontent.com/Chupii37/Titan-Network/refs/heads/main/Titan-Agent/titan-agent.sh -o titan-agent.sh && chmod +x titan-agent.sh && ./titan-agent.sh
    ```
 ## After End of Project
    ```bash
