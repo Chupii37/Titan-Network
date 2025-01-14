@@ -1,4 +1,5 @@
-# TITAN AGENT NODE
+# TITAN NETWORK (Galileo Testnet)
+Fourth test network — Galileo Testnet. The code name of this node is Titan Agent, if you run this node you will get a TNT4 testnet token.
 
 ## System Requirements
 CPU: 2 vCORE
@@ -16,7 +17,7 @@ Before run node you need visit [Titan Network](https://test4.titannet.io/)
 
 Run Node
    ```bash
-   curl -sSL https://raw.githubusercontent.com/Chupii37/Titan-Network/refs/heads/main/Titan-Agent/titan-agent.sh -o titan-agent.sh && chmod +x titan-agent.sh && ./titan-agent.sh
+  wget -qO ~/titan-agent.sh https://raw.githubusercontent.com/Chupii37/Titan-Node/refs/heads/main/Titan-Agent/titan-agent.sh && chmod +x ~/titan-agent.sh && ~/titan-agent.sh
    ```
 ## After End of Project
    ```bash
@@ -31,3 +32,9 @@ Run Node
    ```bash
    sudo rm -rf /opt/titanagent
    ```
+
+## Want to See More Cool Projects?
+
+Buy me a coffee so I can stay awake and make more cool stuff (and less bugs)! I’ll be forever grateful and a little bit jittery. 😆☕ 
+
+[Buy me a coffee](https://paypal.me/chupii37 )
