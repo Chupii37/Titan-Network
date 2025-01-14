@@ -1,4 +1,5 @@
-# Titan Network (Edge Nodes)
+# Titan Network (Cassini Testnet)
+In Cassini Testnet if you run this node you will get TNT3 points.
 
 ## System Requirements
 CPU: 1 vCORE
@@ -15,23 +16,16 @@ Before running the node, you need to sign up for an account on Titan Network. Yo
 
 ## Installation
 Follow the steps below to install the necessary software:
-1. Update the System and Install curl
-    ```bash
-    sudo apt update
-    sudo apt install curl
-    ```
-2. Creat Screen
-   ```bash
-   screen -S titan
-   ```
 
-3. Run Node
+ Run Node
    ```bash
-   wget https://raw.githubusercontent.com/Chupii37/Titan-Network/refs/heads/main/titan-edge.sh -O titan-edge.sh && \
-   chmod +x titan-edge.sh && \
-   sed -i '/read -p "Enter your hash/,+1d' titan-edge.sh && \
-   sed -i '/docker run.*bind/s/^/echo "Enter your hash:"\nread user_hash\n/' titan-edge.sh && \
-   ./titan-edge.sh
+   wget https://raw.githubusercontent.com/Chupii37/Titan-Node/refs/heads/main/titan-edge.sh -O ~/titan-edge.sh && chmod +x ~/titan-edge.sh && ~/titan-edge.sh
    ```
 **Identity Code** (You will be prompted to enter)
+
+## Want to See More Cool Projects?
+
+Buy me a coffee so I can stay awake and make more cool stuff (and less bugs)! I’ll be forever grateful and a little bit jittery. 😆☕ 
+
+[Buy me a coffee](https://paypal.me/chupii37 )
 
