@@ -1,144 +1,103 @@
-#!/bin/bash 
+#!/bin/bash
 
-# Display message after the logo with cyan color
+# Display message with cyan color
 echo -e "\033[36mShowing ANIANI!!!\033[0m" 
 
-# Display logo directly from the URL without saving the file
+# Display logo directly from URL without saving
 echo -e "\033[32mDisplaying logo...\033[0m"
-wget -qO- https://raw.githubusercontent.com/Chupii37/Chupii-Node/refs/heads/main/Logo.sh | bash 
+wget -qO- https://raw.githubusercontent.com/Chupii37/Chupii-Node/refs/heads/main/Logo.sh | bash
 if [ $? -ne 0 ]; then
   echo -e "\033[31mFailed to display logo.\033[0m"
   exit 1
 fi
 
-# Step 1: Check if the system is ARM architecture and select appropriate URL
+# Detect system architecture and select the appropriate agent
 ARCH=$(uname -m)
 if [[ "$ARCH" == "aarch64" || "$ARCH" == "armv7l" ]]; then
     echo -e "\033[32mDetected ARM architecture, using ARM agent...\033[0m"
     AGENT_URL="https://pcdn.titannet.io/test4/bin/agent-arm.zip"
+    AGENT_ZIP="agent-arm.zip"
 else
     echo -e "\033[32mDetected non-ARM architecture, using default agent...\033[0m"
     AGENT_URL="https://pcdn.titannet.io/test4/bin/agent-linux.zip"
+    AGENT_ZIP="agent-linux.zip"
 fi
 
-# Variables for Titan Agent
+# Set installation directory and server URL
 INSTALL_DIR="/opt/titanagent"
-AGENT_ZIP="agent-linux.zip"
 WORKING_DIR="/opt/titanagent"
 SERVER_URL="https://test4-api.titannet.io"
 
-# Step 2: Ask the user to input the Titan key
-echo -e "\033[36mEnter your Titan key: \033[0m"
-read -r KEY  # Accept user input for the key
-
-# Ensure the key is not empty
-if [ -z "$KEY" ]; then
-  echo -e "\033[31mTitan key cannot be empty. Script aborted.\033[0m"
+# Ensure Titan key is set as an environment variable
+if [ -z "$TITAN_KEY" ]; then
+  echo -e "\033[31mTitan key is not set. Please set the TITAN_KEY environment variable.\033[0m"
   exit 1
 fi
 
-# Step 3: Update package list
+# Update package list
 echo -e "\033[34mUpdating package list...\033[0m"
-sudo apt update
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mFailed to update package list.\033[0m"
-  exit 1
-fi
+sudo apt update -y
 
-# Step 4: Install snapd if not installed
-echo -e "\033[34mChecking and installing snapd...\033[0m"
+# Install snapd
+echo -e "\033[34mInstalling snapd...\033[0m"
 sudo apt install -y snapd
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mFailed to install snapd.\033[0m"
-  exit 1
-fi
 
-# Step 5: Enable and start snapd.socket
+# Enable snapd.socket
 echo -e "\033[34mEnabling snapd.socket...\033[0m"
 sudo systemctl enable --now snapd.socket
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mFailed to enable snapd.socket.\033[0m"
-  exit 1
-fi
 
-# Step 6: Install Multipass using Snap
+# Install Multipass
 echo -e "\033[34mInstalling Multipass...\033[0m"
 sudo snap install multipass
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mFailed to install Multipass.\033[0m"
-  exit 1
-fi
 
 # Verify Multipass installation
-echo -e "\033[34mVerifying Multipass installation...\033[0m"
+echo -e "\033[34mVerifying Multipass...\033[0m"
 multipass --version
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mMultipass is not installed correctly.\033[0m"
-  exit 1
-fi
 
-# Step 7: Check Internet Connection
+# Check network connection
 echo -e "\033[34mChecking network connection...\033[0m"
 ping -c 4 google.com > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-  echo -e "\033[31mInternet connection failed. Please check your network.\033[0m"
+  echo -e "\033[31mInternet connection failed.\033[0m"
   exit 1
 fi
 
-# Step 8: Download Titan Agent
+# Download Titan Agent
 echo -e "\033[34mDownloading Titan Agent...\033[0m"
-mkdir -p $INSTALL_DIR  # Create directory if not exists
+mkdir -p $INSTALL_DIR
 
-# Check if the file already exists
 if [ ! -f "$INSTALL_DIR/$AGENT_ZIP" ]; then
   wget -O $INSTALL_DIR/$AGENT_ZIP $AGENT_URL
   if [ $? -ne 0 ]; then
-    echo -e "\033[31mDownload failed. Please check your network connection or the URL.\033[0m"
+    echo -e "\033[31mDownload failed.\033[0m"
     exit 1
   fi
 else
-  echo -e "\033[32mFile $AGENT_ZIP already exists, continuing extraction...\033[0m"
+  echo -e "\033[32mFile already exists, continuing...\033[0m"
 fi
 
-# Step 9: Extract Titan Agent File
-echo -e "\033[34mPreparing directory and extracting file...\033[0m"
-# Ensure unzip is installed
-if ! command -v unzip &> /dev/null; then
-  echo -e "\033[31munzip command not found. Installing unzip...\033[0m"
-  sudo apt install -y unzip
-fi
+# Install unzip if necessary
+echo -e "\033[34mInstalling unzip...\033[0m"
+sudo apt install -y unzip
 
-unzip $INSTALL_DIR/$AGENT_ZIP -d $INSTALL_DIR
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mExtraction failed. Ensure unzip is installed.\033[0m"
-  exit 1
-fi
+# Extract Titan Agent
+echo -e "\033[34mExtracting Titan Agent...\033[0m"
+unzip -o $INSTALL_DIR/$AGENT_ZIP -d $INSTALL_DIR
 
-# Step 10: Grant Execution Permission to the Titan Agent File
-echo -e "\033[34mAdding execution permission to the agent file...\033[0m"
+# Grant execution permission to the agent
+echo -e "\033[34mGranting execution permission...\033[0m"
 chmod +x $INSTALL_DIR/agent
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mFailed to grant execution permission. Run with sudo.\033[0m"
-  exit 1
-fi
 
-# Step 11: Run Titan Agent
-echo -e "\033[34mRunning Titan Agent...\033[0m"
-$INSTALL_DIR/agent --working-dir=$WORKING_DIR --server-url=$SERVER_URL --key=$KEY
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mTitan Agent failed to run.\033[0m"
-  exit 1
-fi
-
-# Step 12: Set Titan Agent as a System Service (Systemd)
-echo -e "\033[34mSetting Titan Agent as a system service...\033[0m"
+# Create systemd service for Titan Agent
+echo -e "\033[34mCreating systemd service...\033[0m"
 cat <<EOF | sudo tee /etc/systemd/system/titan-agent.service
 [Unit]
 Description=Titan Agent Service
 After=network.target
 
 [Service]
-ExecStart=$INSTALL_DIR/agent --working-dir=$WORKING_DIR --server-url=$SERVER_URL --key=$KEY
+Environment="TITAN_KEY=$TITAN_KEY"
+ExecStart=$INSTALL_DIR/agent --working-dir=$WORKING_DIR --server-url=$SERVER_URL --key=${TITAN_KEY}
 WorkingDirectory=$INSTALL_DIR
 Restart=always
 User=root
@@ -147,28 +106,17 @@ Group=root
 [Install]
 WantedBy=multi-user.target
 EOF
-echo -e "\033[32mSystemd unit for Titan Agent has been created.\033[0m"
 
-# Step 13: Enable and Start Titan Agent Service
-echo -e "\033[34mEnabling and starting Titan Agent service...\033[0m"
+# Reload systemd and enable the service
+echo -e "\033[34mReloading systemd...\033[0m"
+sudo systemctl daemon-reload
 sudo systemctl enable titan-agent.service
 sudo systemctl start titan-agent.service
-if [ $? -ne 0 ]; then
-  echo -e "\033[31mFailed to start Titan Agent service.\033[0m"
-  exit 1
-fi
 
-# Step 14: Check Titan Agent Service Status
+# Check service status
 echo -e "\033[34mChecking Titan Agent service status...\033[0m"
 sudo systemctl status titan-agent.service
 
-# Step 15: Display Real-Time Logs from Titan Agent
-echo -e "\033[32mStarting to monitor Titan Agent real-time logs...\033[0m"
-echo -e "\033[34mYou can view the Titan Agent logs in real-time using the following command:\033[0m"
-echo -e "\033[32mjournaltctl -u titan-agent -f --no-hostname -o cat\033[0m"
-
-# Provide user with optional way to exit monitoring
-echo -e "\033[34mPress Ctrl+C to stop viewing the logs.\033[0m"
-
-# Display success message
-echo -e "\033[32mTitan Agent is running and logs are being displayed in real-time.\033[0m"
+# Display success and log monitoring instructions
+echo -e "\033[32mTitan Agent is running.\033[0m"
+echo -e "\033[32mTo monitor logs: sudo journalctl -u titan-agent -f --no-hostname -o cat\033[0m"
