@@ -30,7 +30,14 @@ Run Node
    sudo rm /etc/systemd/system/titan-agent.service
    ```
    ```bash
+   sudo systemctl daemon-reload
+   ```
+   ```bash
    sudo rm -rf /opt/titanagent
+   ```
+   ```bash
+   multipass delete --all
+   multipass purge
    ```
 
 ## Want to See More Cool Projects?
