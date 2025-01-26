@@ -28,14 +28,11 @@ INSTALL_DIR="/opt/titanagent"
 WORKING_DIR="/opt/titanagent"
 SERVER_URL="https://test4-api.titannet.io"
 
-# Prompt user for TITAN_KEY if not set
+# Prompt user for TITAN KEY
+read -p "Please enter your TITAN KEY: " TITAN_KEY
 if [ -z "$TITAN_KEY" ]; then
-  echo -e "\033[33mTitan key is not set.\033[0m"
-  read -p "Please enter your TITAN KEY to proceed: " TITAN_KEY
-  if [ -z "$TITAN_KEY" ]; then
-    echo -e "\033[31mTITAN_KEY is required to proceed. Exiting...\033[0m"
-    exit 1
-  fi
+  echo -e "\033[31mTITAN_KEY is required to proceed. Exiting...\033[0m"
+  exit 1
 fi
 
 # Update package list
@@ -116,10 +113,6 @@ echo -e "\033[34mReloading systemd...\033[0m"
 sudo systemctl daemon-reload
 sudo systemctl enable titan-agent.service
 sudo systemctl start titan-agent.service
-
-# Check service status
-echo -e "\033[34mChecking Titan Agent service status...\033[0m"
-sudo systemctl status titan-agent.service
 
 # Display success and log monitoring instructions
 echo -e "\033[32mTitan Agent is running.\033[0m"
