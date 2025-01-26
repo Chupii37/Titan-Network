@@ -28,10 +28,14 @@ INSTALL_DIR="/opt/titanagent"
 WORKING_DIR="/opt/titanagent"
 SERVER_URL="https://test4-api.titannet.io"
 
-# Ensure Titan key is set as an environment variable
+# Prompt user for TITAN_KEY if not set
 if [ -z "$TITAN_KEY" ]; then
-  echo -e "\033[31mTitan key is not set. Please set the TITAN_KEY environment variable.\033[0m"
-  exit 1
+  echo -e "\033[33mTitan key is not set.\033[0m"
+  read -p "Please enter your TITAN KEY to proceed: " TITAN_KEY
+  if [ -z "$TITAN_KEY" ]; then
+    echo -e "\033[31mTITAN_KEY is required to proceed. Exiting...\033[0m"
+    exit 1
+  fi
 fi
 
 # Update package list
